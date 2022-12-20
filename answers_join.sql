@@ -43,11 +43,12 @@ JOIN `teachers` ON `course_teacher`.`teacher_id` = `teachers`.`id`
 WHERE `departments`.`name` = 'Dipartimento di Matematica';
 
 -- 7
-SELECT `students`.`id`, `students`.`surname`, `students`.`name`, `exams`.`course_id`, `courses`.`name`, `courses`.`cfu`, `courses`.`year`, COUNT(*) AS `tentativi`
+SELECT `students`.`surname`, `students`.`name`, `exams`.`course_id`, `courses`.`name`, `courses`.`cfu`, `courses`.`year`, COUNT(*) AS `tentativi`, MAX(`exam_student`.`vote`) AS `voto_massimo`
 FROM `students`
 JOIN `exam_student` ON `exam_student`.`student_id` = `students`.`id`
 JOIN `exams` ON `exams`.`id` = `exam_student`.`exam_id`
--- utile solo per chiarezza nomi tabella
 JOIN `courses` ON `courses`.`id` = `exams`.`course_id`
-GROUP BY `exams`.`course_id`, `students`.`id`
-ORDER BY `students`.`id`
+GROUP BY `courses`.`id`, `students`.`id`
+-- having quando voglio mettere una condizione sul group by
+HAVING `voto_massimo` >= 18
+ORDER BY `students`.`id`;
